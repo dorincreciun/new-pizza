@@ -1,0 +1,1 @@
+export {HOME_ROUTING} from './config/routing'

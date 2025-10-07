@@ -1,0 +1,13 @@
+export const Header = () => {
+    return (
+        <header className="py-3.5 border-b border-gray-200">
+            <div className="container flex justify-between items-center">
+                <span className={"text-2xl"}>Header</span>
+
+                <button className="">
+                    Login
+                </button>
+            </div>
+        </header>
+    )
+}
