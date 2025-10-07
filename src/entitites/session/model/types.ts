@@ -1,7 +1,7 @@
 import type {paths} from "../../../shared/api/schema";
 
 export type MeResponse = paths['/auth/me']['get']['responses']['200']['content']['application/json']
-export type MeError = paths['/auth/me']['get']['responses']['401']['content']['application/json']
+// export type MeError = paths['/auth/me']['get']['responses']['401']['content']['application/json']
 
 export interface ISession {
     active: boolean;
