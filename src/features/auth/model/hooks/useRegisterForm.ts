@@ -1,6 +1,6 @@
 import {useReducer} from "react";
-import type {IActionRegister, IStoreStateRegister} from "../types.ts";
-import {register} from "../../api/register.ts";
+import type {IActionRegister, IStoreStateRegister} from "../types";
+import {userRegister} from "../../api/userRegister";
 
 const initialState: IStoreStateRegister = {
     name: "",
@@ -29,13 +29,9 @@ export const useRegisterForm = () => {
     const submit = async () => {
         const {name, email, password} = state
         if(email && password && name) {
-            return await register(state)
+            return await userRegister(state)
         }
     }
 
-    return [
-        state,
-        dispatch,
-        submit
-    ] as const;
+    return [ state, dispatch, submit ] as const;
 }

@@ -1,10 +1,10 @@
 import {client} from "../../../shared/api/client.ts";
 import {useSessionStore} from "../../../entitites/session";
 
-export const logout = async () => {
+export const userLogout = async () => {
     const {data} = await client.POST("/auth/logout")
 
     if(data) {
-        useSessionStore.getState().clearSession()
+        useSessionStore.getState().destroySession()
     }
 }

@@ -10,7 +10,10 @@ export const Register = () => {
                    placeholder="name"
                    value={state.name}
                    onChange={(e) =>
-                       dispatch({ type: "change-name", payload: e.target.value })
+                       dispatch({
+                           type: "change-name",
+                           payload: e.target.value
+                       })
                    }
                />
                <input
@@ -18,7 +21,10 @@ export const Register = () => {
                    placeholder="email"
                    value={state.email}
                    onChange={(e) =>
-                       dispatch({ type: "change-email", payload: e.target.value })
+                       dispatch({
+                           type: "change-email",
+                           payload: e.target.value
+                       })
                    }
                />
                <input
@@ -26,7 +32,10 @@ export const Register = () => {
                    placeholder="password"
                    value={state.password}
                    onChange={(e) =>
-                       dispatch({ type: "change-password", payload: e.target.value })
+                       dispatch({
+                           type: "change-password",
+                           payload: e.target.value
+                       })
                    }
                />
                <button type="button" onClick={() => submit()} >

@@ -5,7 +5,6 @@ export type LoginBody = paths["/auth/login"]['post']['requestBody']['content']['
 export type LoginError = paths["/auth/login"]['post']['responses']['401']['content']['application/json']
 
 export type RegisterBody = paths["/auth/register"]['post']['requestBody']['content']['application/json']
-export type RegisterResponse = paths["/auth/register"]['post']['responses']['201']['content']['application/json']
 export type RegisterError = paths["/auth/register"]['post']['responses']['400']['content']['application/json']
 
 /* Reducer types / StoreTypes */

@@ -1,2 +1,2 @@
 /* Store */
-export {useSessionStore} from './model/useSession.ts'
+export {useSessionStore} from './model/hooks/useSession'

@@ -22,7 +22,8 @@ export const authMiddleware: Middleware = {
         if(refresh.ok){
             /*
             * Daca refreshToken mai este valid
-            * mai executam o data request*/
+            * mai executam o data request
+            * */
             return fetch(request.clone())
         }
 

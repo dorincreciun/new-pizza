@@ -11,7 +11,10 @@ export const Login = () => {
                     placeholder="email"
                     value={state.email}
                     onChange={(e) =>
-                        dispatch({ type: "change-email", payload: e.target.value })
+                        dispatch({
+                            type: "change-email",
+                            payload: e.target.value
+                        })
                     }
                 />
                 <input
@@ -19,7 +22,10 @@ export const Login = () => {
                     placeholder="password"
                     value={state.password}
                     onChange={(e) =>
-                        dispatch({ type: "change-password", payload: e.target.value })
+                        dispatch({
+                            type: "change-password",
+                            payload: e.target.value
+                        })
                     }
                 />
                 <button type="button" onClick={() => submit()} >

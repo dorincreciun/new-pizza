@@ -1,6 +1,6 @@
 import {useReducer} from "react";
 import type {IActionLogin, IStoreStateLogin} from "../types.ts";
-import {login} from "../../api/login.ts";
+import {userLogin} from "../../api/userLogin.ts";
 
 const initialState: IStoreStateLogin = {
     email: "",
@@ -26,7 +26,7 @@ export const useLoginForm = () => {
     const submit = async () => {
         const {email, password} = state
         if(email && password) {
-            await login(state)
+            await userLogin(state)
         }
     }
 
