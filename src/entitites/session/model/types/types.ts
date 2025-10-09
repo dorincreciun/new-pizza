@@ -3,7 +3,6 @@ import type {paths} from "../../../../shared/api/schema";
 export type MeResponse = paths['/auth/me']['get']['responses']['200']['content']['application/json']
 
 interface SessionState  {
-    readonly isLoading: boolean;
     readonly active: boolean;
     readonly data: MeResponse | null;
 }

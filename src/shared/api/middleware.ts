@@ -1,4 +1,5 @@
 import type {Middleware} from "openapi-fetch";
+import {useLoaderStore} from "../components/Loader";
 
 export const authMiddleware: Middleware = {
     async onRequest({request}) {
@@ -30,3 +31,19 @@ export const authMiddleware: Middleware = {
         return response
     }
 };
+
+export const loaderMiddleware: Middleware = {
+    async onRequest() {
+        useLoaderStore.getState().startLoading()
+    },
+
+    async onResponse({response}) {
+        useLoaderStore.getState().stopLoading()
+        return response
+    },
+
+    async onError({error}) {
+        useLoaderStore.getState().stopLoading()
+        throw error
+    }
+}

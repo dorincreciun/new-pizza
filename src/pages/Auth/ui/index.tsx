@@ -1,24 +1,17 @@
-import { NavLink, Outlet} from "react-router";
-import {cn} from "../../../shared/lib/cn.ts";
+import {Outlet} from "react-router";
 
 export const AuthPage = () => {
     return (
-        <main className="container">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <h1 className="text-3xl text-center">Autentificare</h1>
-
-                <div className="flex gap-2 my-4">
-                    <NavLink to="login" className={({isActive}) => cn(
-                        "flex-1 text-center px-3 p-2 bg-gray-200",
-                        isActive && "bg-blue-500 text-white"
-                    )}>Login</NavLink>
-                    <NavLink to="register" className={({isActive}) => cn(
-                        "flex-1 text-center px-3 p-2 bg-gray-200",
-                        isActive && "bg-blue-500 text-white"
-                    )}>Register</NavLink>
+        <main className="container h-[calc(100vh-75px)]">
+            <div className={"grid grid-cols-6 gap-x-3 h-full"}>
+                <div className={"col-span-4 size-full flex items-center justify-center bg-gray-100"}>
+                    Alt continut
                 </div>
 
-                <Outlet/>
+                {/* Partea dreaptă - formularul de autentificare */}
+                <div className={"col-span-2 flex items-center justify-center p-6"}>
+                    <Outlet/>
+                </div>
             </div>
         </main>
     );

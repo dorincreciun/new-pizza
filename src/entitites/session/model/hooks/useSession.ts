@@ -4,22 +4,21 @@ import {client} from "../../../../shared/api/client.ts";
 
 export const useSessionStore = create<SessionStore>((set) => {
     return {
-        isLoading: true,
         active: false,
         data: null,
 
         initSession: async () => {
             try {
-                const {data, error } = await client.GET("/auth/me")
+                const {data, error} = await client.GET("/auth/me")
 
-                if(error) return
+                if (error) return
 
-                if(data) {
-                    set({isLoading: true, active: true, data})
+                if (data) {
+                    set({active: true, data})
                 }
 
-            } finally {
-                set({isLoading: false})
+            } catch (e) {
+                console.error(e)
             }
         },
 
