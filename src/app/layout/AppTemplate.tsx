@@ -13,10 +13,12 @@ export function AppTemplate() {
 
     return (
         <BrowserRouter>
-            <Loader />
             <Header />
             <Router />
+
+            {/* */}
             <AuthModal />
+            <Loader />
         </BrowserRouter>
     )
 }
