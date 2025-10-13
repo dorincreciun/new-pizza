@@ -4,7 +4,9 @@ import {Router} from "../router";
 import {useEffect} from "react";
 import {useSessionStore} from "../../entitites/session";
 import {Loader} from "../../shared/components/Loader";
-import {AuthModal} from "../../widgets/AuthModal";
+/* Modals */
+import {ModalCard} from "../../widgets/ModalCard";
+import {ModalAuth} from "../../widgets/ModalAuth";
 
 export function AppTemplate() {
     const init = useSessionStore((s) => s.initSession)
@@ -13,11 +15,15 @@ export function AppTemplate() {
 
     return (
         <BrowserRouter>
+            {/* App */}
             <Header />
             <Router />
 
-            {/* */}
-            <AuthModal />
+            {/* Modals */}
+            <ModalAuth />
+            <ModalCard />
+
+            {/* Overlay */}
             <Loader />
         </BrowserRouter>
     )

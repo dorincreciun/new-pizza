@@ -2,7 +2,7 @@ import {useAuthModalStore} from "../model/store.ts";
 import {Modal} from "../../../shared/components/Modal";
 import {Login, Register} from "../../../features/auth";
 
-export const AuthModal = () => {
+export const ModalAuth = () => {
     const close = useAuthModalStore((s) => s.onClose)
     const open = useAuthModalStore((s) => s.open)
     const view = useAuthModalStore((s) => s.view)

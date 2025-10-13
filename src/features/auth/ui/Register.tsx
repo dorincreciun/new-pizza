@@ -3,7 +3,7 @@ import {Input} from "../../../shared/components/Input";
 import {Hint} from "../../../shared/components/Hint";
 import {Button} from "../../../shared/components/Button";
 import {useRegisterForm} from "../model/hooks/useRegisterForm.ts";
-import {useAuthModalStore} from "../../../widgets/AuthModal";
+import {useAuthModalStore} from "../../../widgets/ModalAuth";
 
 export const Register = () => {
     const [state, dispatch, submit, isError] = useRegisterForm()
@@ -12,7 +12,7 @@ export const Register = () => {
     return (
         <section className="w-full flex items-center justify-cente animate-fade-in">
             <div className="w-full max-w-[560px] flex-1">
-                <h1 className="text-2xl font-semibold text-center mb-6">
+                <h1 className="text-2xl font-semibold text-center mb-6 px-5">
                     Creează-ți contul
                 </h1>
 

@@ -23,23 +23,31 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["User"];
+                    "application/json": components["schemas"]["AuthRegisterRequest"];
                 };
             };
             responses: {
                 /** @description User created successfully */
                 201: {
                     headers: {
-                        /** @description Access and refresh tokens set as HTTP-only cookies */
-                        "Set-Cookie"?: string;
+                        "Set-Cookie": components["headers"]["SetCookieHeader"];
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": components["schemas"]["AuthResponse"];
                     };
                 };
-                /** @description Invalid input or email already exists */
+                /** @description Invalid input or account already exists */
                 400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -74,27 +82,40 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": {
-                        /** Format: email */
-                        email: string;
-                        password: string;
-                    };
+                    "application/json": components["schemas"]["AuthLoginRequest"];
                 };
             };
             responses: {
                 /** @description Login successful */
                 200: {
                     headers: {
-                        /** @description Access and refresh tokens set as HTTP-only cookies */
-                        "Set-Cookie"?: string;
+                        "Set-Cookie": components["headers"]["SetCookieHeader"];
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": components["schemas"]["AuthResponse"];
                     };
                 };
+                /** @description Missing credentials */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
                 /** @description Invalid credentials */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -117,38 +138,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Refresh access token */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Token refreshed successfully */
-                200: {
-                    headers: {
-                        /** @description New access and refresh tokens set as HTTP-only cookies */
-                        "Set-Cookie"?: string;
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AuthResponse"];
-                    };
-                };
-                /** @description Invalid or expired refresh token */
-                401: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Error"];
-                    };
-                };
-            };
-        };
+        get?: never;
         put?: never;
         /** Refresh access token */
         post: {
@@ -163,16 +153,24 @@ export interface paths {
                 /** @description Token refreshed successfully */
                 200: {
                     headers: {
-                        /** @description New access and refresh tokens set as HTTP-only cookies */
-                        "Set-Cookie"?: string;
+                        "Set-Cookie": components["headers"]["SetCookieHeader"];
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": components["schemas"]["AuthResponse"];
                     };
                 };
-                /** @description Invalid or expired refresh token */
+                /** @description Missing, invalid or expired refresh token */
                 401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -223,6 +221,15 @@ export interface paths {
                         "application/json": components["schemas"]["Error"];
                     };
                 };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
+                    };
+                };
             };
         };
         put?: never;
@@ -255,12 +262,21 @@ export interface paths {
                 /** @description Logout successful */
                 200: {
                     headers: {
-                        /** @description Access and refresh tokens cleared */
+                        /** @description Cookies cleared (accessToken, refreshToken) */
                         "Set-Cookie"?: string;
                         [name: string]: unknown;
                     };
                     content: {
                         "application/json": components["schemas"]["LogoutResponse"];
+                    };
+                };
+                /** @description Internal server error (logout still clears cookies and returns 200 in implementation) */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Error"];
                     };
                 };
             };
@@ -271,36 +287,1254 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obține toate categoriile
+         * @description Returnează o listă cu toate categoriile din sistem, sortate alfabetic după nume.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista cu toate categoriile */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CategoryListResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Creează o nouă categorie
+         * @description Creează o nouă categorie în sistem. Numele categoriei trebuie să fie unic.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateCategoryRequest"];
+                };
+            };
+            responses: {
+                /** @description Categoria a fost creată cu succes */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CategoryResponse"];
+                    };
+                };
+                /** @description Date invalide */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Categoria există deja */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține statistici despre categorii */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Statisticile categoriilor */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CategoryStatsResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/categories/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține o categorie după ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul categoriei
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Categoria a fost găsită */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CategoryResponse"];
+                    };
+                };
+                /** @description ID invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Categoria nu a fost găsită */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        /** Actualizează o categorie */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul categoriei
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateCategoryRequest"];
+                };
+            };
+            responses: {
+                /** @description Categoria a fost actualizată cu succes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["CategoryResponse"];
+                    };
+                };
+                /** @description Date invalide */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Categoria nu a fost găsită */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Numele categoriei există deja */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Șterge o categorie */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul categoriei
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Categoria a fost ștearsă cu succes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Categoria a fost ștearsă cu succes */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description ID invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Categoria nu a fost găsită */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține toate produsele */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista cu toate produsele */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductListResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Creează un nou produs */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateProductRequest"];
+                };
+            };
+            responses: {
+                /** @description Produsul a fost creat cu succes */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductResponse"];
+                    };
+                };
+                /** @description Date invalide */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Categoria specificată nu există */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Caută produse după nume */
+        get: {
+            parameters: {
+                query: {
+                    /**
+                     * @description Numele produsului de căutat
+                     * @example carne
+                     */
+                    name: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Rezultatele căutării */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductListResponse"];
+                    };
+                };
+                /** @description Parametrul de căutare lipsă */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/low-stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține produsele cu stoc scăzut */
+        get: {
+            parameters: {
+                query?: {
+                    /**
+                     * @description Pragul pentru stoc scăzut
+                     * @example 5
+                     */
+                    threshold?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsele cu stoc scăzut */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LowStockResponse"];
+                    };
+                };
+                /** @description Prag invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține statistici despre produse */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Statisticile produselor */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductStatsResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/category/{categoryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obține produsele dintr-o anumită categorie
+         * @description Returnează toate produsele care aparțin unei categorii specifice, identificată prin ID. Aceasta este funcționalitatea principală pentru obținerea produselor după categorie.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul unic al categoriei
+                     * @example 1
+                     */
+                    categoryId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsele din categoria specificată */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductListResponse"];
+                    };
+                };
+                /** @description ID invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/category-name/{categoryName}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obține produsele dintr-o anumită categorie (după numele categoriei)
+         * @description Returnează toate produsele care aparțin unei categorii specifice, identificată prin numele categoriei. Alternativă la căutarea după ID.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description Numele exact al categoriei (case-sensitive)
+                     * @example Branza
+                     */
+                    categoryName: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsele din categoria specificată */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductListResponse"];
+                    };
+                };
+                /** @description Numele categoriei invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obține un produs după ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul produsului
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsul a fost găsit */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductResponse"];
+                    };
+                };
+                /** @description ID invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Produsul nu a fost găsit */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        /** Actualizează un produs */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul produsului
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateProductRequest"];
+                };
+            };
+            responses: {
+                /** @description Produsul a fost actualizat cu succes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductResponse"];
+                    };
+                };
+                /** @description Date invalide */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Produsul sau categoria nu a fost găsită */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Șterge un produs */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul produsului
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsul a fost șters cu succes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example Produsul a fost șters cu succes */
+                            message?: string;
+                        };
+                    };
+                };
+                /** @description ID invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Produsul nu a fost găsit */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/products/{id}/stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Actualizează stocul unui produs */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description ID-ul produsului
+                     * @example 1
+                     */
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UpdateStockRequest"];
+                };
+            };
+            responses: {
+                /** @description Stocul produsului a fost actualizat cu succes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductResponse"];
+                    };
+                };
+                /** @description Date invalide */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Produsul nu a fost găsit */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        User: {
-            /** Format: email */
-            email: string;
-            password: string;
-            name?: string;
-        };
         UserDTO: {
-            id: string;
-            /** Format: email */
+            /** @example 1 */
+            id: number;
+            /**
+             * Format: email
+             * @example user@example.com
+             */
             email: string;
+            /** @example Ion Popescu */
             name?: string;
         };
         AuthResponse: {
             user?: components["schemas"]["UserDTO"];
         };
         LogoutResponse: {
+            /** @example Logged out */
             message?: string;
+        };
+        /** @example {
+         *       "email": "user@example.com",
+         *       "password": "secret123",
+         *       "name": "Ion"
+         *     } */
+        AuthRegisterRequest: {
+            /** Format: email */
+            email: string;
+            password: string;
+            name?: string;
+        };
+        /** @example {
+         *       "email": "user@example.com",
+         *       "password": "secret123"
+         *     } */
+        AuthLoginRequest: {
+            /** Format: email */
+            email: string;
+            password: string;
         };
         Error: {
             message?: string;
+        };
+        Category: {
+            /**
+             * @description ID-ul unic al categoriei
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description Numele categoriei
+             * @example Carne
+             */
+            name: string;
+            /**
+             * @description Descrierea categoriei
+             * @example Produse din carne
+             */
+            description?: string;
+            /**
+             * Format: date-time
+             * @description Data și ora creării
+             * @example 2024-01-15T10:30:00Z
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Data și ora ultimei actualizări
+             * @example 2024-01-15T10:30:00Z
+             */
+            updatedAt?: string;
+        };
+        CreateCategoryRequest: {
+            /**
+             * @description Numele categoriei
+             * @example Carne
+             */
+            name: string;
+            /**
+             * @description Descrierea categoriei
+             * @example Produse din carne de porc, vită, pui
+             */
+            description?: string;
+        };
+        UpdateCategoryRequest: {
+            /**
+             * @description Numele categoriei
+             * @example Carne și mezeluri
+             */
+            name?: string;
+            /**
+             * @description Descrierea categoriei
+             * @example Produse din carne și mezeluri
+             */
+            description?: string;
+        };
+        CategoryResponse: {
+            /** @example Categoria a fost creată cu succes */
+            message?: string;
+            data?: components["schemas"]["Category"];
+        };
+        CategoryListResponse: {
+            /** @example Categoriile au fost obținute cu succes */
+            message?: string;
+            data?: components["schemas"]["Category"][];
+            /** @example 5 */
+            count?: number;
+        };
+        CategoryStatsResponse: {
+            /** @example Statisticile categoriilor au fost obținute cu succes */
+            message?: string;
+            data?: {
+                /** @example 10 */
+                totalCategories?: number;
+            };
+        };
+        ErrorResponse: {
+            /** @example Eroare de validare */
+            error?: string;
+        };
+        Product: {
+            /**
+             * @description ID-ul unic al produsului
+             * @example 1
+             */
+            id?: number;
+            /**
+             * @description Numele produsului
+             * @example Carne de porc
+             */
+            name: string;
+            /**
+             * @description Descrierea produsului
+             * @example Carne de porc proaspătă
+             */
+            description?: string;
+            /**
+             * Format: decimal
+             * @description Prețul produsului
+             * @example 25.5
+             */
+            price: number;
+            /**
+             * @description Cantitatea în stoc
+             * @example 100
+             */
+            stock?: number;
+            /**
+             * @description ID-ul categoriei
+             * @example 1
+             */
+            categoryId: number;
+            /**
+             * Format: date-time
+             * @description Data și ora creării
+             * @example 2024-01-15T10:30:00Z
+             */
+            createdAt?: string;
+            /**
+             * Format: date-time
+             * @description Data și ora ultimei actualizări
+             * @example 2024-01-15T10:30:00Z
+             */
+            updatedAt?: string;
+            category?: components["schemas"]["Category"];
+        };
+        CreateProductRequest: {
+            /**
+             * @description Numele produsului
+             * @example Carne de porc
+             */
+            name: string;
+            /**
+             * @description Descrierea produsului
+             * @example Carne de porc proaspătă
+             */
+            description?: string;
+            /**
+             * Format: decimal
+             * @description Prețul produsului
+             * @example 25.5
+             */
+            price: number;
+            /**
+             * @description Cantitatea în stoc
+             * @example 100
+             */
+            stock?: number;
+            /**
+             * @description ID-ul categoriei
+             * @example 1
+             */
+            categoryId: number;
+        };
+        UpdateProductRequest: {
+            /**
+             * @description Numele produsului
+             * @example Carne de porc premium
+             */
+            name?: string;
+            /**
+             * @description Descrierea produsului
+             * @example Carne de porc premium proaspătă
+             */
+            description?: string;
+            /**
+             * Format: decimal
+             * @description Prețul produsului
+             * @example 30
+             */
+            price?: number;
+            /**
+             * @description Cantitatea în stoc
+             * @example 150
+             */
+            stock?: number;
+            /**
+             * @description ID-ul categoriei
+             * @example 1
+             */
+            categoryId?: number;
+        };
+        UpdateStockRequest: {
+            /**
+             * @description Noua cantitate în stoc
+             * @example 200
+             */
+            stock: number;
+        };
+        ProductResponse: {
+            /** @example Produsul a fost creat cu succes */
+            message?: string;
+            data?: components["schemas"]["Product"];
+        };
+        ProductListResponse: {
+            /** @example Produsele au fost obținute cu succes */
+            message?: string;
+            data?: components["schemas"]["Product"][];
+            /** @example 10 */
+            count?: number;
+        };
+        ProductStatsResponse: {
+            /** @example Statisticile produselor au fost obținute cu succes */
+            message?: string;
+            data?: {
+                /** @example 50 */
+                totalProducts?: number;
+            };
+        };
+        LowStockResponse: {
+            /** @example Produsele cu stoc scăzut au fost obținute cu succes */
+            message?: string;
+            data?: components["schemas"]["Product"][];
+            /** @example 5 */
+            count?: number;
+            /** @example 10 */
+            threshold?: number;
         };
     };
     responses: never;
     parameters: never;
     requestBodies: never;
-    headers: never;
+    headers: {
+        /** @description Header Set-Cookie care conține accesToken și refreshToken ca HTTP-only cookies */
+        SetCookieHeader: string;
+    };
     pathItems: never;
 }
 export type $defs = Record<string, never>;

@@ -3,7 +3,7 @@ import {Hint} from "../../../shared/components/Hint";
 import {Label} from "../../../shared/components/Label";
 import {Button} from "../../../shared/components/Button";
 import {useLoginForm} from "../model/hooks/useLoginForm.ts";
-import {useAuthModalStore} from "../../../widgets/AuthModal";
+import {useAuthModalStore} from "../../../widgets/ModalAuth";
 
 export const Login = () => {
     const [state, dispatch, submit, isError] = useLoginForm()
@@ -12,7 +12,7 @@ export const Login = () => {
     return (
         <section className="w-full flex items-center justify-center animate-fade-in">
             <div className="w-full max-w-[560px] flex-1">
-                <h1 className="text-2xl font-semibold text-center mb-6">
+                <h1 className="text-2xl font-semibold text-center mb-6 px-5">
                     Autentifică-te în contul tău
                 </h1>
 
