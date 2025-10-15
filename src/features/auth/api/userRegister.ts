@@ -1,15 +1,15 @@
 import {client} from "../../../shared/api/client.ts";
-import type {RegisterBody, RegisterError} from "../model/types.ts";
+import type {StateRegisterForm} from "../model/types.ts";
 import {useSessionStore} from "../../../entitites/session";
 
-export const userRegister = async (payload: RegisterBody): Promise<void | RegisterError> => {
+export const userRegister = async (payload: StateRegisterForm) => {
     const {data, error} = await client.POST("/auth/register", {body: payload})
 
-    if(error) {
-        return error as RegisterError
+    if (error) {
+        return error
     }
 
-    if(data) {
-        useSessionStore.getState().createSession({ active: true, data })
+    if (data) {
+        useSessionStore.getState().createSession({active: true, data})
     }
 }

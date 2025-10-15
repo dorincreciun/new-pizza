@@ -1,80 +1,48 @@
+import {useRef} from "react";
+import {NavLink} from "react-router";
 import {cn} from "../../../shared/lib/cn.ts";
 import {type Category, useCategories} from "../../../entitites/categories";
-import {NavLink} from "react-router";
-import {useRef, useState} from "react";
+import {useMaxVisible} from "../model/hooks/useMaxVisible.ts";
+import {usePartitionCategories} from "../model/hooks/usePartitionCategories.ts";
 
 export const Categories = () => {
-    const parentRef = useRef<HTMLDivElement | null>(null);
-    const childRef = useRef<Map<string, HTMLAnchorElement | null>>(new Map());
+    const [categories] = useCategories();
 
-    const [visibleChilds, setVisibleChilds] = useState<string[]>([]);
-    const [invisibleChilds, setInvisibleChilds] = useState<string[]>([]);
+    const categoryNav = useRef<HTMLDivElement | null>(null);
+    const categoryElements = useRef<Map<string, number>>(new Map());
+    const dropdownButton = useRef<HTMLSelectElement | null>(null);
 
-    console.dir(childRef);
+    const maxVisible = useMaxVisible();
+    const {visible, invisible} = usePartitionCategories(categories, maxVisible);
 
-    const [categories, error] = useCategories();
-
-    if (error || categories.length === 0) return null;
-
-
-    /* Calculam lungimea children-urilor */
-    const calculateChildrenWidth = (children: Iterable<HTMLElement | null>) => {
-        let totalWidth = 0;
-
-        if(!Array.isArray(children)) return
-
-        for (const child of children) {
-            totalWidth += child.offsetWidth;
-        }
-        return totalWidth;
-    };
-
-    /* Setam ref-urile la elementele children */
-    const setRef = (name: string, el: HTMLAnchorElement | null) => {
-        if (el) {
-            childRef.current.set(name, el);
-        } else {
-            childRef.current.delete(name);
-        }
+    if (!Array.isArray(categories) || categories.length === 0) {
+        return null;
     }
 
     return (
         <nav
-            ref={parentRef}
+            ref={categoryNav}
             className={cn(
-                "bg-surface relative flex rounded-2xl px-2 py-1.5 select-none max-w-max",
+                "bg-surface relative flex items-center gap-2 rounded-2xl px-2 py-1.5 select-none max-w-max",
                 "focus-within:ring-2 focus-within:ring-gray-400/10",
-                "transition-all duration-200 ease-in-out"
+                "transition-all duration-200 ease-in-out",
+                "overflow-hidden"
             )}
+            aria-label="Categories navigation"
         >
-            {/* All */}
-            <NavLink
-                to="/"
-                ref={(el) => setRef("all", el)}
-                className={({isActive}) =>
-                    cn(
-                        "cursor-pointer rounded-2xl px-6 py-2.5 text-base font-medium",
-                        "transition-all duration-300 ease-out",
-                        isActive
-                            ? "text-primary bg-white shadow-[0_14px_20px_rgba(0,0,0,0.05)]"
-                            : "hover:text-primary text-text-primary"
-                    )
-                }
-            >
-                Toate
-            </NavLink>
-
-            {/* Api */}
-            {categories.map((category: Category) => {
+            {/* Tab-urile vizibile */}
+            {visible.map((category: Category) => {
                 const {id, name} = category;
                 return (
                     <NavLink
+                        ref={(el) => {
+                            if (el) categoryElements.current.set(name, el.clientWidth);
+                        }}
                         key={id ?? name}
-                        to={`/${name.toLowerCase()}`}
-                        ref={(el) => setRef(name, el)}
+                        to={name}
                         className={({isActive}) =>
                             cn(
-                                "cursor-pointer rounded-2xl px-6 py-2.5 text-base font-medium",
+                                "cursor-pointer rounded-2xl px-6 py-2.5 text-base font-medium whitespace-nowrap",
                                 "transition-all duration-300 ease-out",
                                 isActive
                                     ? "text-primary bg-white shadow-[0_14px_20px_rgba(0,0,0,0.05)]"
@@ -84,8 +52,29 @@ export const Categories = () => {
                     >
                         {name}
                     </NavLink>
-                )
+                );
             })}
+
+            {/* Dropdown pentru cele invizibile (sau toate pe mobil) */}
+            {
+                invisible.length > 0 && (
+                    <select
+                        ref={dropdownButton}
+                        defaultValue=""
+                        aria-label="Show hidden categories"
+                    >
+                        <option value="">Show More</option>
+                        {invisible.map((category: Category) => {
+                            const {id, name} = category;
+                            return (
+                                <option key={id ?? name} value={name}>
+                                    {name}
+                                </option>
+                            );
+                        })}
+                    </select>
+                )
+            }
         </nav>
     );
 };

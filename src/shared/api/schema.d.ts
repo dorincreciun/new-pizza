@@ -287,7 +287,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/categories": {
+    "/api/categories": {
         parameters: {
             query?: never;
             header?: never;

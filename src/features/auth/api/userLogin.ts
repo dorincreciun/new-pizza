@@ -1,8 +1,8 @@
 import {client} from "../../../shared/api/client.ts";
 import {useSessionStore} from "../../../entitites/session";
-import type {LoginBody} from "../model/types.ts";
+import type {StateLoginForm} from "../model/types.ts";
 
-export const userLogin = async (payload: LoginBody) => {
+export const userLogin = async (payload: StateLoginForm) => {
     const {data, error} = await client.POST("/auth/login", {body: payload})
 
     if (error) {
