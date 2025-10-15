@@ -29,7 +29,6 @@ export const Categories = () => {
                 "transition-all duration-200 ease-in-out",
             )}
         >
-            {/* Tab-urile vizibile */}
             {visible.map((category: Category) => {
                 const {id, name} = category;
                 return (
@@ -54,15 +53,18 @@ export const Categories = () => {
                 );
             })}
 
-            {/* Dropdown pentru cele invizibile (sau toate pe mobil) */}
             {
                 invisible.length > 0 && (
                     <Dropdown>
                         <Dropdown.Toggle className={"px-6 py-2.5 flex items-center gap-2"}>
                             Show More
-                            <ChevronDown />
+                            <ChevronDown/>
                         </Dropdown.Toggle>
-                        <Dropdown.Body>
+                        <Dropdown.Body className={cn([
+                            "flex flex-col items-center gap-2 top-14",
+                            "bg-surface rounded-2xl px-2 py-1.5 select-none max-w-max",
+                            "focus-within:ring-2 focus-within:ring-gray-400/10",
+                        ])}>
                             {invisible.map((category: Category) => {
                                 const {id, name} = category;
                                 return (
