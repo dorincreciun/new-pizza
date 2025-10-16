@@ -287,7 +287,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/categories": {
+    "/categories": {
         parameters: {
             query?: never;
             header?: never;
@@ -389,7 +389,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/categories/stats": {
+    "/categories/stats": {
         parameters: {
             query?: never;
             header?: never;
@@ -434,7 +434,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/categories/{id}": {
+    "/categories/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -625,7 +625,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products": {
+    "/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -721,7 +721,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/search": {
+    "/products/search": {
         parameters: {
             query?: never;
             header?: never;
@@ -781,7 +781,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/low-stock": {
+    "/products/low-stock": {
         parameters: {
             query?: never;
             header?: never;
@@ -841,7 +841,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/stats": {
+    "/products/stats": {
         parameters: {
             query?: never;
             header?: never;
@@ -886,7 +886,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/category/{categoryId}": {
+    "/products/category/{categoryId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -949,7 +949,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/category-name/{categoryName}": {
+    "/products/category-name/{categoryName}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1012,7 +1012,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/{id}": {
+    "/products/category-slug/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Obține produsele dintr-o categorie după slug
+         * @description Returnează toate produsele care aparțin unei categorii, identificată prin slug.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /**
+                     * @description Slug-ul categoriei
+                     * @example carne
+                     */
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Produsele din categoria specificată */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductListResponse"];
+                    };
+                };
+                /** @description Slug invalid */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Eroare internă a serverului */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/products/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1194,7 +1257,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/products/{id}/stock": {
+    "/products/{id}/stock": {
         parameters: {
             query?: never;
             header?: never;
@@ -1318,6 +1381,11 @@ export interface components {
              * @example 1
              */
             id?: number;
+            /**
+             * @description Identificator URL-friendly al categoriei
+             * @example carne
+             */
+            slug?: string;
             /**
              * @description Numele categoriei
              * @example Carne

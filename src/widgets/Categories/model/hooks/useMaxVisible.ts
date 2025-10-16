@@ -1,4 +1,3 @@
-// src/features/categories-nav/model/useMaxVisible.ts
 import { useEffect, useState } from "react";
 import {computeMaxVisibleByWidth} from "../../config/breakpoints.ts";
 

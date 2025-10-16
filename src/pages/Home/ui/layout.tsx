@@ -1,9 +1,9 @@
 import {Title} from "../../../shared/components/Title";
-import {Categories} from "../../../features/categories";
 import {Outlet} from "react-router";
 import {Dropdown} from "../../../shared/components/Dropdown";
 import {cn} from "../../../shared/lib/cn.ts";
 import {ArrowUpDown} from "lucide-react";
+import {Categories} from "../../../widgets/Categories";
 
 export const CatalogLayout = () => {
     return (
@@ -38,6 +38,10 @@ export const CatalogLayout = () => {
                     </div>
                 </div>
             </section>
+
+            <div className="container">
+                <Dropdown placeholder={"Show More"} />
+            </div>
 
             <Outlet/>
         </main>

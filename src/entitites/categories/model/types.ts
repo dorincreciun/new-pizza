@@ -1,6 +1,6 @@
 import type {paths} from "../../../shared/api/schema";
 
-export type Category = NonNullable<
+export type CategoryType = NonNullable<
     paths['/categories']['get']['responses']['200']['content']['application/json']['data']
 >[number];
 

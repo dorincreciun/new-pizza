@@ -1,9 +1,9 @@
-import type {Category, ResponseError} from "./types.ts";
+import type {CategoryType, ResponseError} from "./types.ts";
 import {useEffect, useState} from "react";
 import {client} from "../../../shared/api/client.ts";
 
 export const useCategories = () => {
-    const [categories, setCategories] = useState<Category[]>([])
+    const [categories, setCategories] = useState<CategoryType[]>([])
     const [error, setError] = useState<ResponseError | null>(null)
 
     useEffect(() => {
