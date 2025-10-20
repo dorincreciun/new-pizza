@@ -21,7 +21,7 @@ export const Categories = () => {
                 "transition-all duration-200 ease-in-out",
             )}
         >
-            {visible.map((props: CategoryType) => <Category {...props} />)}
+            {visible.map((props: CategoryType) => <Category key={props.id} {...props} />)}
             <CategoryDropdown invisible={invisible} />
         </nav>
     )

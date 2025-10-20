@@ -1,48 +1,70 @@
+import {useEffect, useRef, useState} from "react";
 import {ChevronDown} from "lucide-react";
-import type {CategoryType} from "../../../entitites/categories";
-import {useNavigate} from "react-router";
+import {Category, type CategoryType} from "../../../entitites/categories";
 import {cn} from "../../../shared/lib/cn.ts";
 
-export const CategoryDropdown = ({invisible}: {invisible: any}) => {
-    const navigate = useNavigate();
-    return (
-        <div className="relative">
-            <label htmlFor="categories-more" className="sr-only">
-                Alte categorii
-            </label>
+export const CategoryDropdown = ({invisible}: { invisible: CategoryType[] }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
-            <select
-                id="categories-more"
-                value={""}
-                onChange={(e) => navigate(e.target.value)}
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener("click", handleClickOutside);
+
+        return () => {
+            window.removeEventListener("click", handleClickOutside);
+        };
+
+    }, [])
+
+    return (
+        <div ref={ref} className="relative group">
+            <button
+                onClick={() => setIsOpen((prev) => !prev)}
                 className={cn(
-                    "appearance-none cursor-pointer rounded-2xl px-6 py-2.5 text-base font-medium",
-                    "transition-all duration-300 ease-out",
-                    "text-text-primary hover:text-primary bg-white shadow-[0_14px_20px_rgba(0,0,0,0.05)]",
-                    "pr-10",
-                    "focus:outline-none focus:ring-2 focus:ring-gray-400/10"
+                    "flex items-center gap-2",
+                    "cursor-pointer rounded-2xl px-6 py-2.5 text-base font-medium",
+                    "text-text-primary hover:text-primary",
+                    "select-none"
                 )}
             >
-                <option value="">Show More</option>
-                {invisible.map((category: CategoryType) => {
-                    const { id, name, slug } = category;
-                    return (
-                        <option
-                            key={id ?? name}
-                            value={slug ?? name}
-                        >
-                            {name}
-                        </option>
-                    );
-                })}
-            </select>
+                Show More
+                <ChevronDown
+                    size={18}
+                    aria-hidden="true"
+                    className={cn(
+                        "transition-transform duration-200",
+                        isOpen ? "rotate-180" : "rotate-0"
+                    )}
+                />
+            </button>
 
-            {/* Iconița Chevron suprapusă peste select */}
-            <ChevronDown
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
-                size={18}
-                aria-hidden="true"
-            />
+            <div
+                className={cn(
+                    "absolute -right-2 mt-4 z-50",
+                    "bg-surface rounded-2xl px-3 py-2",
+                    "transition-all duration-200 origin-top",
+                    "group-focus-within:ring-2 group-focus-within:ring-gray-400/10",
+                    isOpen
+                        ? "opacity-100 translate-y-0 scale-100"
+                        : "opacity-0 translate-y-2 scale-95 pointer-events-none"
+                )}
+            >
+                <div className="flex flex-col gap-2">
+                    {invisible.map((props: CategoryType) => (
+                        <Category
+                            key={props.id}
+                            onClick={() => setIsOpen(false)}
+                            {...props}
+                        />
+                    ))}
+                </div>
+            </div>
         </div>
     )
 }
