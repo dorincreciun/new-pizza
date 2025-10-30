@@ -1,2 +1,2 @@
 /* Types */
-export type {UserDto} from './model/types'
+export type {UserDTO} from './model/types'

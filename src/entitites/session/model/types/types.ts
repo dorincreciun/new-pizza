@@ -1,6 +1,6 @@
-import type {paths} from "../../../../shared/api/schema";
+import type {components} from "../../../../shared/api/schema";
 
-export type MeResponse = paths['/auth/me']['get']['responses']['200']['content']['application/json']
+export type MeResponse = components['schemas']["AuthResponse"]
 
 interface SessionState  {
     readonly active: boolean;

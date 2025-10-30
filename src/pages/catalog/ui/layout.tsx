@@ -2,7 +2,7 @@ import {Title} from "../../../shared/components/Title";
 import {Outlet} from "react-router";
 import {Categories} from "../../../widgets/Categories";
 
-export const CatalogLayout = () => {
+const CatalogLayout = () => {
     return (
         <main>
             <section className={"mb-9 mt-10"}>
@@ -14,16 +14,15 @@ export const CatalogLayout = () => {
 
                         {/* Categories */}
                         <Categories/>
-
-
                     </div>
                 </div>
             </section>
 
             <div className="container">
+                <Outlet/>
             </div>
-
-            <Outlet/>
         </main>
     )
 }
+
+export default CatalogLayout;

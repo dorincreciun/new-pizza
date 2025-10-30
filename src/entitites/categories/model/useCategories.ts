@@ -1,6 +1,7 @@
-import type {CategoryType, ResponseError} from "./types.ts";
+import type {CategoryType} from "./types.ts";
 import {useEffect, useState} from "react";
 import {client} from "../../../shared/api/client.ts";
+import type {ResponseError} from "../../../shared/types/global";
 
 export const useCategories = () => {
     const [categories, setCategories] = useState<CategoryType[]>([])
@@ -9,12 +10,13 @@ export const useCategories = () => {
     useEffect(() => {
         void (async () => {
             const { data, error } = await client.GET("/categories");
+            console.log(data)
 
             if (error) {
                 setError(error);
                 setCategories([]);
             } else {
-                setCategories(data?.data ?? []);
+                setCategories(data.items ?? []);
             }
         })();
     }, [])

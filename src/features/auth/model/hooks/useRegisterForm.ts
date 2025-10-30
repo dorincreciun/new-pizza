@@ -63,7 +63,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
 
             if (error) {
                 setIsError(true);
-                if (error.message) setErrorMessages([error.message]);
                 return;
             }
 

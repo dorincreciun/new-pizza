@@ -13,6 +13,7 @@ export const Categories = () => {
     if (!Array.isArray(categories) || categories.length === 0) {
         return null;
     }
+
     return (
         <nav
             className={cn(
