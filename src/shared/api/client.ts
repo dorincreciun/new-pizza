@@ -1,10 +1,13 @@
-import type {paths} from "./schema";
+import type {paths} from "../types/schema";
 import createClient from "openapi-fetch";
-import {authMiddleware, loaderMiddleware} from "./middleware.ts";
+
+/* Middlewares */
+import {loader} from "./middleware/loader.ts";
+import {auth} from "./middleware/auth.ts";
 
 export const client = createClient<paths>({
     baseUrl: "/api",
 });
 
-client.use(authMiddleware);
-client.use(loaderMiddleware)
+client.use(auth);
+client.use(loader)

@@ -1,18 +1,18 @@
-import { createRoot } from 'react-dom/client'
-import { useEffect } from 'react'
-import { BrowserRouter } from 'react-router'
+import {createRoot} from 'react-dom/client'
+import {useEffect} from 'react'
+import {BrowserRouter} from 'react-router'
 
 /* Stores / state */
-import { useSessionStore } from '../entitites/session'
+import {initSession} from '../entitites/session'
 
 /* App router */
-import { AppRouter } from './router'
+import {AppRouter} from './router'
 
 /* Widgets */
-import { Header } from '../widgets/Header'
-import { ModalAuth } from '../widgets/ModalAuth'
-import { ModalCard } from '../widgets/ModalCard'
-import { Loader } from '../shared/components/Loader'
+import {Header} from '../widgets/Header'
+import {ModalAuth} from '../widgets/ModalAuth'
+import {ModalCard} from '../widgets/ModalCard'
+import {Loader} from '../shared/components/Loader'
 
 /* Styles */
 import './styles/index.css'
@@ -20,9 +20,8 @@ import './styles/index.css'
 createRoot(document.getElementById('root')!).render(<AppTemplate/>)
 
 function AppTemplate() {
-    const init = useSessionStore((s) => s.initSession)
 
-    useEffect(() => void init(), [])
+    useEffect(() => void initSession(), [])
 
     return (
         <BrowserRouter>

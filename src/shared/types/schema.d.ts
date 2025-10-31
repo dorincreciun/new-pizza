@@ -26,6 +26,17 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
+                    content: {
+                        "application/json": components["schemas"]["StandardResponse"] & {
+                            data?: components["schemas"]["Cart"];
+                        };
+                    };
+                };
+                /** @description Unauthorized (cookie lipsă sau expirat) */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
                     content?: never;
                 };
             };
@@ -83,15 +94,26 @@ export interface paths {
                 };
             };
             responses: {
-                /** @description Creat */
+                /** @description Item adăugat în coș */
                 201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["StandardResponse"] & {
+                            data?: components["schemas"]["Cart"];
+                        };
+                    };
+                };
+                /** @description Date invalide */
+                400: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content?: never;
                 };
-                /** @description Date invalide */
-                400: {
+                /** @description Unauthorized (cookie lipsă sau expirat) */
+                401: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -141,6 +163,13 @@ export interface paths {
                     };
                     content?: never;
                 };
+                /** @description Unauthorized (cookie lipsă sau expirat) */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
                 /** @description Item-ul nu a fost găsit */
                 404: {
                     headers: {
@@ -175,10 +204,21 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["StandardResponse"] & {
+                            data?: components["schemas"]["Cart"];
+                        };
+                    };
                 };
                 /** @description Cantitate invalidă */
                 400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unauthorized (cookie lipsă sau expirat) */
+                401: {
                     headers: {
                         [name: string]: unknown;
                     };
@@ -329,7 +369,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Refresh access token */
+        /** Refresh access token (folosește cookie HTTP-Only setat la login) */
         post: {
             parameters: {
                 query?: never;
@@ -400,7 +440,7 @@ export interface paths {
                         "application/json": components["schemas"]["AuthResponse"];
                     };
                 };
-                /** @description Unauthorized */
+                /** @description Unauthorized (cookie lipsă sau expirat) */
                 401: {
                     headers: {
                         [name: string]: unknown;
@@ -498,16 +538,10 @@ export interface paths {
                     priceMin?: number;
                     /** @description Preț maxim (pe minPrice) */
                     priceMax?: number;
-                    /**
-                     * @description CSV sau flags[]=a&flags[]=b
-                     * @example spicy,vegetarian
-                     */
-                    flags?: string;
-                    /**
-                     * @description CSV sau ingredients[]=a&ingredients[]=b
-                     * @example mozzarella,tomato
-                     */
-                    ingredients?: string;
+                    /** @description Filtru după flaguri */
+                    flags?: string[];
+                    /** @description Filtru după ingrediente */
+                    ingredients?: string[];
                     /**
                      * @description Tip aluat (cheie)
                      * @example clasic
@@ -590,10 +624,10 @@ export interface paths {
                     categorySlug?: string;
                     priceMin?: number;
                     priceMax?: number;
-                    /** @description CSV sau flags[]=a&flags[]=b */
-                    flags?: string;
-                    /** @description CSV sau ingredients[]=a&ingredients[]=b */
-                    ingredients?: string;
+                    /** @description Filtru după flaguri */
+                    flags?: string[];
+                    /** @description Filtru după ingrediente */
+                    ingredients?: string[];
                     dough?: string;
                     size?: string;
                     isCustomizable?: boolean;
@@ -676,7 +710,8 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
+                        "application/json": components["schemas"]["StandardResponse"] & {
+                            data?: components["schemas"]["Category"][];
                             items?: components["schemas"]["Category"][];
                         };
                     };
@@ -1075,24 +1110,32 @@ export interface components {
             updatedAt?: string;
         };
         Ingredient: {
+            /** @example ingredient-mozzarella */
+            id?: string;
             /** @example mozzarella */
             key: string;
             /** @example Mozzarella */
             label?: string;
         };
         Flag: {
+            /** @example flag-vegetarian */
+            id?: string;
             /** @example vegetarian */
             key: string;
             /** @example Vegetarian */
             label?: string;
         };
         DoughType: {
+            /** @example dough-clasic */
+            id?: string;
             /** @example clasic */
             key: string;
             /** @example Aluat Clasic */
             label?: string;
         };
         SizeOption: {
+            /** @example size-medie */
+            id?: string;
             /** @example medie */
             key: string;
             /** @example Medie (30cm) */
@@ -1180,16 +1223,52 @@ export interface components {
         BrowseResponse: {
             message?: string;
             data?: components["schemas"]["ProductWithRelations"][];
-            pagination?: {
-                /** @example 1 */
-                page?: number;
-                /** @example 12 */
-                limit?: number;
-                /** @example 65 */
-                total?: number;
-                /** @example 6 */
-                totalPages?: number;
+            pagination?: components["schemas"]["PaginationMeta"];
+            meta?: components["schemas"]["PaginationMeta"];
+        };
+        StandardResponse: {
+            /** @example true */
+            success?: boolean;
+            /** @example Operatie efectuata cu succes */
+            message?: string;
+            data?: unknown;
+            meta?: Record<string, never> | null;
+        };
+        PaginationMeta: {
+            /** @example 1 */
+            page?: number;
+            /** @example 12 */
+            limit?: number;
+            /** @example 65 */
+            total?: number;
+            /** @example 6 */
+            totalPages?: number;
+        };
+        CartItem: {
+            /** @example 501 */
+            id: number;
+            product?: components["schemas"]["Product"];
+            variant?: {
+                /** @example 101 */
+                id?: number;
+                doughType?: components["schemas"]["DoughType"];
+                sizeOption?: components["schemas"]["SizeOption"];
+                /** @example 120 */
+                price?: number;
             };
+            /** @example 2 */
+            quantity: number;
+            /** @example 240 */
+            lineTotal: number;
+        };
+        Cart: {
+            items?: components["schemas"]["CartItem"][];
+            /** @example 240 */
+            subtotal?: number;
+            /** @example 0 */
+            discounts?: number;
+            /** @example 240 */
+            total?: number;
         };
     };
     responses: never;

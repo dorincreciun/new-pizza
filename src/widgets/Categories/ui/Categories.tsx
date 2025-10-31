@@ -5,12 +5,12 @@ import {usePartitionCategories} from "../model/hooks/usePartitionCategories.ts";
 import {CategoryDropdown} from "../../../features/category-dropdown";
 
 export const Categories = () => {
-    const [categories] = useCategories();
+    const {data} = useCategories();
 
     const maxVisible = useMaxVisible();
-    const {visible, invisible} = usePartitionCategories(categories, maxVisible);
+    const {visible, invisible} = usePartitionCategories(data, maxVisible);
 
-    if (!Array.isArray(categories) || categories.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
         return null;
     }
 

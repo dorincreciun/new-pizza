@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "generate": "npx openapi-typescript http://localhost:3000/openapi.yaml -o ./src/shared/api/schema.d.ts",
+    "generate": "npx openapi-typescript http://localhost:3000/openapi.yaml -o src/shared/types/schema.d.ts",
     "preview": "vite preview"
   },
   "dependencies": {
