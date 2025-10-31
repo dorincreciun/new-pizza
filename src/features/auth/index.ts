@@ -1,6 +1,6 @@
 /* Api */
-export {userLogin} from './api/userLogin.ts'
-export {userRegister} from './api/userRegister.ts'
+export {userLogin} from './api/user-login.ts'
+export {userRegister} from './api/user-register.ts'
 
 /* Ui */
 export {Login} from './ui/Login'

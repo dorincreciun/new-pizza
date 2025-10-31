@@ -1,5 +1,5 @@
 import {Button} from "../../../shared/components/Button";
-import {userLogout} from "../../../features/auth/api/userLogout.ts";
+import {userLogout} from "../../../features/auth/api/user-logout.ts";
 import {LogOut, ShoppingBag, User} from "lucide-react";
 import {useSessionStore} from "../../../entitites/session";
 import {useAuthModalStore} from "../../ModalAuth";

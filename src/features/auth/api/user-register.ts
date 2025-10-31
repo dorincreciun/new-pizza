@@ -6,10 +6,15 @@ export const userRegister = async (payload: StateRegisterForm) => {
     const {data, error} = await client.POST("/auth/register", {body: payload})
 
     if (error) {
-        return error
+        console.error(error)
+        useSessionStore
+            .getState()
+            .destroySession()
     }
 
-    if (data) {
-        useSessionStore.getState().createSession({active: true, data})
+    if (data?.user) {
+        useSessionStore
+            .getState()
+            .createSession(data.user)
     }
 }

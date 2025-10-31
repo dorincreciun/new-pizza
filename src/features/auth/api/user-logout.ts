@@ -5,6 +5,8 @@ export const userLogout = async () => {
     const {data} = await client.POST("/auth/logout")
 
     if(data) {
-        useSessionStore.getState().destroySession()
+        useSessionStore
+            .getState()
+            .destroySession()
     }
 }
