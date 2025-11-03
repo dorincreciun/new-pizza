@@ -1,7 +1,7 @@
 import type { CategoryType, UseCategoriesResult } from "./types.ts";
 import { useEffect, useState, useCallback } from "react";
 import { client } from "../../../shared/api/client.ts";
-import type { ResponseError } from "../../../shared/types/global";
+import type {ApiErrorResponse} from "../../../shared/types/global";
 
 export const useCategories = (): UseCategoriesResult => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -16,7 +16,7 @@ export const useCategories = (): UseCategoriesResult => {
             const { data, error } = await client.GET("/categories");
 
             if (error) {
-                const apiError = error as ResponseError;
+                const apiError = error as ApiErrorResponse;
                 const messageFromApi =
                     apiError?.error ??
                     apiError?.details?.[0]?.message ??
