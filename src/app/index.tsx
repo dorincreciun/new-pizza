@@ -8,10 +8,13 @@ import {initSession} from '../entitites/session'
 /* App router */
 import {AppRouter} from './router'
 
+/* Features */
+import {ModalLogin} from "../features/authorization";
+
 /* Widgets */
 import {Header} from '../widgets/Header'
-import {ModalAuth} from '../widgets/ModalAuth'
-import {ModalCard} from '../widgets/ModalCard'
+
+/* Shared */
 import {Loader} from '../shared/components/Loader'
 
 /* Styles */
@@ -30,8 +33,7 @@ function AppTemplate() {
             <AppRouter />
 
             {/* Modals */}
-            <ModalAuth />
-            <ModalCard />
+            <ModalLogin />
 
             {/* Overlay */}
             <Loader />

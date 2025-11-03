@@ -1,6 +1,5 @@
 import {Title} from "../../../shared/components/Title";
 import {Outlet} from "react-router";
-import {Categories} from "../../../widgets/Categories";
 
 const CatalogLayout = () => {
     return (
@@ -12,8 +11,7 @@ const CatalogLayout = () => {
 
                     <div className={"mt-5 flex items-center justify-between gap-4"}>
 
-                        {/* Categories */}
-                        <Categories/>
+                        Categorii
                     </div>
                 </div>
             </section>

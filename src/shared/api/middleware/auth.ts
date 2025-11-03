@@ -11,7 +11,7 @@ export const auth: Middleware = {
 
         if (response.status !== 401 || isRefreshEndpoint) {
             /*
-            * Daca status nu e 401 sau nu am /auth/refresh
+            * Daca status nu e 401 sau nu am /authorization/refresh
             * returnam
             * */
             return response;
