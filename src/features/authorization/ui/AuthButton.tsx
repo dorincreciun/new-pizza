@@ -1,11 +1,11 @@
 import {Button} from "../../../shared/components/Button";
 import {LogOut, User} from "lucide-react";
 import {useSessionStore} from "../../../entitites/session";
-import {useLoginModal} from "../model/store/login-store";
+import {useAuthModalStore} from "../model/store/useAuthModalStore.ts";
 
 export const AuthButton = () => {
     const active = useSessionStore((s) => s.active)
-    const fnOpenLogin = useLoginModal((s) => s.open)
+    const open = useAuthModalStore((s) => s.open)
 
     switch (active) {
         case true:
@@ -18,7 +18,7 @@ export const AuthButton = () => {
             return (
                 <Button
                     kind="outlined"
-                    onClick={fnOpenLogin}
+                    onClick={() => open("login")}
                 >
                     <User/> Login
                 </Button>

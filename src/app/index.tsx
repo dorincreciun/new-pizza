@@ -8,11 +8,9 @@ import {initSession} from '../entitites/session'
 /* App router */
 import {AppRouter} from './router'
 
-/* Features */
-import {ModalLogin} from "../features/authorization";
-
 /* Widgets */
 import {Header} from '../widgets/Header'
+import {AuthModal} from "../widgets/AuthModal";
 
 /* Shared */
 import {Loader} from '../shared/components/Loader'
@@ -33,7 +31,7 @@ function AppTemplate() {
             <AppRouter />
 
             {/* Modals */}
-            <ModalLogin />
+            <AuthModal />
 
             {/* Overlay */}
             <Loader />

@@ -1,8 +1,7 @@
 /* Ui */
 export {AuthButton} from './ui/AuthButton'
-export {ModalLogin} from './ui/ModalLogin'
-export {ModalRegister} from './ui/ModalRegister'
+export {LoginForm} from './ui/LoginForm.tsx'
+export {RegisterForm} from './ui/RegisterForm.tsx'
 
 /* Store */
-export {useLoginModal} from './model/store/login-store'
-export {useRegisterModal} from './model/store/register-store'
+export {useAuthModalStore} from './model/store/useAuthModalStore'
