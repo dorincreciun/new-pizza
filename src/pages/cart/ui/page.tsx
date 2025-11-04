@@ -1,8 +1,10 @@
+import {Checkbox} from "../../../shared/components/Checkbox";
+
 const CartPage = () => {
     return (
-        <>
-            Cart Page
-        </>
+        <div className={"container"}>
+            <Checkbox />
+        </div>
     )
 }
 
